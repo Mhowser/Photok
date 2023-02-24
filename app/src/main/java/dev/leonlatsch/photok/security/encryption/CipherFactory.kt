@@ -16,17 +16,23 @@
 
 package dev.leonlatsch.photok.security.encryption
 
-import java.io.InputStream
-import java.io.OutputStream
+import dev.leonlatsch.photok.other.AES_ALGORITHM
+import timber.log.Timber
+import java.security.GeneralSecurityException
 import javax.crypto.Cipher
-import javax.crypto.CipherInputStream
-import javax.crypto.CipherOutputStream
+import javax.crypto.spec.SecretKeySpec
+import javax.inject.Inject
 
-interface EncryptionManager {
-    val isReady: Boolean
-    fun initialize(password: String)
-    fun reset()
-    fun createCipher(mode: Int): Cipher?
-    fun createCipherInputStream(origInputStream: InputStream, password: String? = null): CipherInputStream?
-    fun createCipherOutputStream(origOutputStream: OutputStream, password: String? = null): CipherOutputStream?
+class CipherFactory @Inject constructor() {
+
+    fun create(mode: Int, secretKeySpec: SecretKeySpec?): Cipher? {
+        return try {
+            Cipher.getInstance(AES_ALGORITHM).apply {
+                init(mode, secretKeySpec)
+            }
+        } catch (e: GeneralSecurityException) {
+            Timber.d("Error initializing cipher: $e")
+            null
+        }
+    }
 }

@@ -16,24 +16,61 @@
 
 package dev.leonlatsch.photok.security.encryption
 
+import dev.leonlatsch.photok.other.AES
+import dev.leonlatsch.photok.other.AES_ALGORITHM
+import dev.leonlatsch.photok.other.SHA_256
+import timber.log.Timber
 import java.io.InputStream
 import java.io.OutputStream
+import java.nio.charset.StandardCharsets
+import java.security.GeneralSecurityException
+import java.security.MessageDigest
 import javax.crypto.Cipher
 import javax.crypto.CipherInputStream
 import javax.crypto.CipherOutputStream
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
+import javax.inject.Inject
 
-class EncryptionManagerV2 : EncryptionManager {
+private const val PASSWORD_MIN_LENGTH = 6
+
+class EncryptionManagerV2 @Inject constructor(
+    private val cipherFactory: CipherFactory
+): EncryptionManager {
+
+    private var encryptionKey: SecretKeySpec? = null
+
+    override var isReady: Boolean = false
 
     override fun initialize(password: String) {
-        TODO("Not yet implemented")
+        if (password.length < PASSWORD_MIN_LENGTH) {
+            isReady = false
+            return
+        }
+
+        try {
+            encryptionKey = generateKeySpec(password)
+            isReady = true
+        } catch (e: GeneralSecurityException) {
+            Timber.d("Error initializing EncryptionManager: $e")
+            isReady = false
+        }
     }
 
     override fun reset() {
-        TODO("Not yet implemented")
+        encryptionKey = null
+        isReady = false
     }
 
-    override fun createCipher(mode: Int): Cipher? {
-        TODO("Not yet implemented")
+    override fun createCipher(mode: Int): Cipher? = createCipher(mode, encryptionKey)
+
+    private fun createCipher(mode: Int, secretKeySpec: SecretKeySpec?): Cipher? {
+        return if (isReady) {
+            cipherFactory.create(mode, secretKeySpec)
+        } else {
+            Timber.d("EncryptionManager has to be ready to create a cipher")
+            null
+        }
     }
 
     override fun createCipherInputStream(
@@ -49,4 +86,10 @@ class EncryptionManagerV2 : EncryptionManager {
     ): CipherOutputStream? {
         TODO("Not yet implemented")
     }
+
+    private fun generateKeySpec(password: String): SecretKeySpec =
+        MessageDigest.getInstance(SHA_256).let { md ->
+            val bytes = md.digest(password.toByteArray(StandardCharsets.UTF_8))
+            SecretKeySpec(bytes, AES)
+        }
 }

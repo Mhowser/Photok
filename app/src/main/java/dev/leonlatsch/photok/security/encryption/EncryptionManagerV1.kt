@@ -30,6 +30,7 @@ import javax.crypto.CipherInputStream
 import javax.crypto.CipherOutputStream
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
+import javax.inject.Inject
 
 /**
  * Manages encryption.
@@ -38,12 +39,12 @@ import javax.crypto.spec.SecretKeySpec
  * @since 1.0.0
  * @author Leon Latsch
  */
-class EncryptionManagerV1 : EncryptionManager {
+class EncryptionManagerV1 @Inject constructor() : EncryptionManager {
 
     private var encryptionKey: SecretKeySpec? = null
     private var ivParameterSpec: IvParameterSpec? = null
 
-    var isReady: Boolean = false
+    override var isReady: Boolean = false
 
     val encodedKey: ByteArray
         get() = encryptionKey!!.encoded

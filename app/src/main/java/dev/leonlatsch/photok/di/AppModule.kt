@@ -18,6 +18,7 @@ package dev.leonlatsch.photok.di
 
 import android.content.Context
 import androidx.room.Room
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,7 +40,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+abstract class AppModule {
 
     @Provides
     @Singleton
@@ -57,9 +58,9 @@ object AppModule {
     @Singleton
     fun provideConfig(@ApplicationContext app: Context) = Config(app)
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideEncryptionManager(): EncryptionManager = EncryptionManagerV1()
+    abstract fun provideEncryptionManager(impl: EncryptionManagerV1): EncryptionManager
 
     @Provides
     @Singleton
