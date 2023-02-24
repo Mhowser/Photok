@@ -1,5 +1,5 @@
 /*
- *   Copyright 2020-2022 Leon Latsch
+ *   Copyright 2020-2023 Leon Latsch
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package dev.leonlatsch.photok.security
+package dev.leonlatsch.photok.security.encryption
 
 import dev.leonlatsch.photok.other.AES
 import dev.leonlatsch.photok.other.AES_ALGORITHM
@@ -38,7 +38,7 @@ import javax.crypto.spec.SecretKeySpec
  * @since 1.0.0
  * @author Leon Latsch
  */
-class EncryptionManager {
+class EncryptionManagerV1 : EncryptionManager {
 
     private var encryptionKey: SecretKeySpec? = null
     private var ivParameterSpec: IvParameterSpec? = null
@@ -55,7 +55,7 @@ class EncryptionManager {
      *
      * @param password the password string to use.
      */
-    fun initialize(password: String) {
+    override fun initialize(password: String) {
         if (password.length < 6) {
             isReady = false
             return
@@ -73,7 +73,7 @@ class EncryptionManager {
     /**
      * Resets the encryption manager to default state.
      */
-    fun reset() {
+    override fun reset() {
         encryptionKey = null
         ivParameterSpec = null
         isReady = false
@@ -85,9 +85,9 @@ class EncryptionManager {
      *
      * @param password if not null, this will be used for decrypting
      */
-    fun createCipherInputStream(
+    override fun createCipherInputStream(
         origInputStream: InputStream,
-        password: String? = null
+        password: String?
     ): CipherInputStream? {
         return if (isReady) try {
             val cipher = if (password == null) {
@@ -111,9 +111,9 @@ class EncryptionManager {
      *
      * @param password if not null, this will be used for encrypting
      */
-    fun createCipherOutputStream(
+    override fun createCipherOutputStream(
         origOutputStream: OutputStream,
-        password: String? = null
+        password: String?
     ): CipherOutputStream? {
         return if (isReady) try {
             val cipher = if (password == null) {
@@ -141,7 +141,7 @@ class EncryptionManager {
     /**
      * Create a cipher with local stored encryption key.
      */
-    fun createCipher(mode: Int) = createCipher(mode, encryptionKey, ivParameterSpec)
+    override fun createCipher(mode: Int) = createCipher(mode, encryptionKey, ivParameterSpec)
 
     private fun createCipher(
         mode: Int,

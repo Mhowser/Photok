@@ -32,7 +32,7 @@ import dev.leonlatsch.photok.other.extensions.lazyClose
 import dev.leonlatsch.photok.other.extensions.remove
 import dev.leonlatsch.photok.other.getFileName
 import dev.leonlatsch.photok.other.getFileSize
-import dev.leonlatsch.photok.security.EncryptionManager
+import dev.leonlatsch.photok.security.encryption.EncryptionManager
 import dev.leonlatsch.photok.uicomponnets.bindings.ObservableViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

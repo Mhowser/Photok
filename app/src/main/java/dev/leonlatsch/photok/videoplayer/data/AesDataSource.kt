@@ -21,7 +21,7 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.TransferListener
 import dev.leonlatsch.photok.other.extensions.forceSkip
-import dev.leonlatsch.photok.security.EncryptionManager
+import dev.leonlatsch.photok.security.encryption.EncryptionManager
 import java.io.File
 import java.io.IOException
 import javax.crypto.CipherInputStream

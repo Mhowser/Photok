@@ -22,7 +22,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.leonlatsch.photok.BR
 import dev.leonlatsch.photok.other.extensions.empty
-import dev.leonlatsch.photok.security.EncryptionManager
+import dev.leonlatsch.photok.security.encryption.EncryptionManager
 import dev.leonlatsch.photok.security.PasswordManager
 import dev.leonlatsch.photok.uicomponnets.bindings.ObservableViewModel
 import kotlinx.coroutines.launch

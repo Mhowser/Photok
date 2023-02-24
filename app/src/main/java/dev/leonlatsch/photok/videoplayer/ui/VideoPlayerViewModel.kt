@@ -30,7 +30,7 @@ import dev.leonlatsch.photok.BR
 import dev.leonlatsch.photok.model.database.entity.Photo
 import dev.leonlatsch.photok.model.repositories.PhotoRepository
 import dev.leonlatsch.photok.other.onMain
-import dev.leonlatsch.photok.security.EncryptionManager
+import dev.leonlatsch.photok.security.encryption.EncryptionManager
 import dev.leonlatsch.photok.uicomponnets.bindings.ObservableViewModel
 import dev.leonlatsch.photok.videoplayer.data.AesDataSource
 import kotlinx.coroutines.Dispatchers

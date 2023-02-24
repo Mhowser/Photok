@@ -22,7 +22,7 @@ import androidx.lifecycle.*
 import dagger.hilt.android.HiltAndroidApp
 import dev.leonlatsch.photok.main.ui.MainActivity
 import dev.leonlatsch.photok.other.setAppDesign
-import dev.leonlatsch.photok.security.EncryptionManager
+import dev.leonlatsch.photok.security.encryption.EncryptionManager
 import dev.leonlatsch.photok.settings.data.Config
 import timber.log.Timber
 import javax.inject.Inject

@@ -26,7 +26,8 @@ import dagger.hilt.components.SingletonComponent
 import dev.leonlatsch.photok.gallery.ui.importing.SharedUrisStore
 import dev.leonlatsch.photok.model.database.PhotokDatabase
 import dev.leonlatsch.photok.model.database.PhotokDatabase.Companion.DATABASE_NAME
-import dev.leonlatsch.photok.security.EncryptionManager
+import dev.leonlatsch.photok.security.encryption.EncryptionManager
+import dev.leonlatsch.photok.security.encryption.EncryptionManagerV1
 import dev.leonlatsch.photok.settings.data.Config
 import javax.inject.Singleton
 
@@ -58,7 +59,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideEncryptionManager() = EncryptionManager()
+    fun provideEncryptionManager(): EncryptionManager = EncryptionManagerV1()
 
     @Provides
     @Singleton
