@@ -17,7 +17,6 @@
 package dev.leonlatsch.photok.security.encryption
 
 import dev.leonlatsch.photok.other.AES
-import dev.leonlatsch.photok.other.AES_ALGORITHM
 import dev.leonlatsch.photok.other.SHA_256
 import timber.log.Timber
 import java.io.InputStream
@@ -28,7 +27,6 @@ import java.security.MessageDigest
 import javax.crypto.Cipher
 import javax.crypto.CipherInputStream
 import javax.crypto.CipherOutputStream
-import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 
@@ -73,18 +71,47 @@ class EncryptionManagerV2 @Inject constructor(
         }
     }
 
+    private fun createCipher(mode: Int, password: String): Cipher? {
+        val keySpec = generateKeySpec(password)
+        return createCipher(mode, keySpec)
+    }
+
     override fun createCipherInputStream(
         origInputStream: InputStream,
         password: String?
-    ): CipherInputStream? {
-        TODO("Not yet implemented")
+    ): CipherInputStream? = if (isReady) try {
+        val cipher = if (password == null) {
+            createCipher(Cipher.DECRYPT_MODE)
+        } else {
+            createCipher(Cipher.DECRYPT_MODE, password)
+        }
+
+        CipherInputStream(origInputStream, cipher)
+    } catch (e: GeneralSecurityException) {
+        Timber.e("Error creating encrypted input stream: $e")
+        null
+    } else {
+        Timber.e("Cannot create encrypted input stream if key is not ready")
+        null
     }
 
     override fun createCipherOutputStream(
         origOutputStream: OutputStream,
         password: String?
-    ): CipherOutputStream? {
-        TODO("Not yet implemented")
+    ): CipherOutputStream? = if (isReady) try {
+        val cipher = if (password == null) {
+            createCipher(Cipher.ENCRYPT_MODE)
+        } else {
+            createCipher(Cipher.ENCRYPT_MODE, password)
+        }
+
+        CipherOutputStream(origOutputStream, cipher)
+    } catch (e: GeneralSecurityException) {
+        Timber.e("Error creating encrypted input stream: $e")
+        null
+    } else {
+        Timber.e("Cannot create encrypted input stream if key is not ready")
+        null
     }
 
     private fun generateKeySpec(password: String): SecretKeySpec =
